@@ -5,15 +5,13 @@ using UnityEngine.Assertions.Must;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody playerRb;
+    private GameManager gameManagerScript;
     
+    private Rigidbody playerRb;
     private Animator playerAnim;
-
     private AudioSource playerAudio;
-
     private SkinnedMeshRenderer playerSMRend1; // These are used to access the two child meshed renderers used for the player
     //private SkinnedMeshRenderer playerSMRend2;
-
     private AudioSource mainCameraAudio;
 
     public ParticleSystem explosionParticle;
@@ -46,6 +44,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
+
         // These looks for the child Skinned Mesh Renderers for player. 'transform.' makes sure it only searches this object (the player) and childs. 
         //playerSMRend2 = transform.Find("CH_Punk").GetComponent<SkinnedMeshRenderer>();
         playerSMRend1 = transform.Find("CH_Sheriff").GetComponent<SkinnedMeshRenderer>();
@@ -79,47 +79,47 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isOnGround && gameReady && !gameOver)
+        if (gameManagerScript.GameIsPlaying)
         {
-            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            // Simple added solution for doublejump
-            if (canDoubleJump)
+            if (Input.GetKeyDown(KeyCode.Space) && isOnGround && gameReady && !gameOver)
             {
-                canDoubleJump = false;
+                playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                // Simple added solution for doublejump
+                if (canDoubleJump)
+                {
+                    canDoubleJump = false;
+                }
+                else
+                {
+                    isOnGround = false;
+                }
+                playerAnim.SetTrigger("Jump_trig");
+                playerAudio.PlayOneShot(jumpSound, 1f);
+
+                dirtParticle.Stop();
+
             }
-            else
+
+            // Speed up - uses animator Speed_f as multiplier in animation to change animation speed.
+            if (gameManagerScript.GameIsPlaying && Input.GetKeyDown(KeyCode.LeftShift))
             {
-                isOnGround = false;
+                gameManagerScript.SetHighSceneSpeed();
+                playerAnim.SetFloat("Speed_f", runStaticFast);
             }
-            playerAnim.SetTrigger("Jump_trig");
-            playerAudio.PlayOneShot(jumpSound, 1f);
-            
-            dirtParticle.Stop();
-        
+            // Slow down
+            if (gameManagerScript.GameIsPlaying && Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                gameManagerScript.SetNormalSceneSpeed();
+                playerAnim.SetFloat("Speed_f", runStaticSpeed);
+            }
         }
-        // Uses animator Speed_f as multiplier in animation to change animation speed.
-        if (gameReady && Input.GetKeyDown(KeyCode.LeftShift))
+        // Running some cinematic (intro scene)
+        else if (!gameManagerScript.GameOver) 
         {
-            // Speeding up anim
-            playerAnim.SetFloat("Speed_f", runStaticFast);
-
-        }
-        if (gameReady && Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            // Normal speed anim
-            playerAnim.SetFloat("Speed_f", runStaticSpeed);
-        }
-
-        if (!gameReady) // intro is running
-        {
-            // dirtParticle.Stop(); // Because it doesn't work at start!!!! Ugly-hack this is!
-
-            // Create intro walk
             if (isOnGround)
             {
                 playerAnim.SetBool("Grounded", true);
                 canvasScript.HideBigText();
-                //canvasScript.ShowBigText("GO!");
                 transform.Translate(Vector3.forward * Time.deltaTime * walkSpeed);
             }
             if (transform.position.x >= startPosX) 
@@ -135,55 +135,55 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-     
-        if (collision.gameObject.CompareTag("Ground"))
+        if (gameManagerScript.GameIsPlaying)
         {
-            isOnGround = true;
-            canDoubleJump = true;
-            if (gameReady && !gameOver)
+            if (collision.gameObject.CompareTag("Ground"))
             {
+                isOnGround = true;
+                canDoubleJump = true;
                 dirtParticle.Play();
             }
-        }
-        if (collision.gameObject.CompareTag("Obstacle")) 
-        {
-            gameOver = true;
-                        
-            playerAnim.SetBool("Death_b", true);
-            playerAnim.SetInteger("DeathType_int", 1);
-            explosionParticle.Play();
-            playerAudio.PlayOneShot(crashSound, 1f);
-
-            dirtParticle.Stop();
-            dirtParticle.Clear();
-
-            // Stop main audio
-            mainCameraAudio.Stop();
-            canvasScript.ShowBigText("GAME OVER!!");
-            //Debug.Log("GAME OVER! Score: " + scoreKeeper);
-        }
-        if (collision.gameObject.CompareTag("Score"))
-        {
-            playerAudio.PlayOneShot(bananaSound, 0.8f);
-            Destroy(collision.gameObject);
-            if (Input.GetKeyUp(KeyCode.LeftShift))
+            else if (collision.gameObject.CompareTag("Score"))
             {
-                AddDoubleScore();
+                playerAudio.PlayOneShot(bananaSound, 0.8f);
+                Destroy(collision.gameObject);
+                gameManagerScript.AddScore(1, false);
             }
-            else
+            else if (collision.gameObject.CompareTag("Obstacle"))
             {
-                AddScore();
-            }
-            bananasCaught++;
+                gameManagerScript.SignalGameOver();
 
+                playerAnim.SetBool("Death_b", true);
+                playerAnim.SetInteger("DeathType_int", 1);
+                explosionParticle.Play();
+                playerAudio.PlayOneShot(crashSound, 1f);
+
+                dirtParticle.Stop();
+                dirtParticle.Clear();
+
+                // Stop main audio
+                mainCameraAudio.Stop();
+                canvasScript.ShowBigText("GAME OVER!!");
+                //Debug.Log("GAME OVER! Score: " + scoreKeeper);
+            }
         }
-        if (collision.gameObject.CompareTag("Carrier"))
+        // Running some cinematic (intro scene)
+        else if (!gameManagerScript.GameOver)
         {
-            // Show and drop player
-            playerAnim.SetBool("Grounded", false);
-            GetComponent<Rigidbody>().useGravity = true;
-            playerSMRend1.enabled = true;
-            //playerSMRend2.enabled = true;
+            if (collision.gameObject.CompareTag("Carrier"))
+            {
+                // Show and drop player
+                playerAnim.SetBool("Grounded", false);
+                GetComponent<Rigidbody>().useGravity = true;
+                playerSMRend1.enabled = true;
+                //playerSMRend2.enabled = true;
+            }
+            if (collision.gameObject.CompareTag("Ground"))
+            {
+                isOnGround = true;
+                canDoubleJump = true;
+            }
+
         }
     }
     public void AddScore()

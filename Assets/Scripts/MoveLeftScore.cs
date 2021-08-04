@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveLeft : MonoBehaviour
+public class MoveLeftScore : MoveLeft
 {
     //private float currentSceneSpeed;
-    protected float leftBound = -10;
-    protected GameManager gameManagerScript;
+    //protected float leftBound = -10;
+    //protected GameManager gameManagerScript;
 
     //public float speed = 30;
     //public float superspeed = 40;
     private PlayerController playerControllerScript;
-    public float LeftBound { get; private set; }
+    //public float LeftBound { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -55,13 +55,13 @@ public class MoveLeft : MonoBehaviour
 
     }
     // POLYMORPHISM (OVERLOADING), INHERITANCE and ABSTRACTION all in one
-    virtual protected void DoMoveLeft()
+    /*virtual protected void DoMoveLeft()
     {
         transform.Translate(Vector3.left * Time.deltaTime * gameManagerScript.SceneSpeed, Space.World);
     }
     virtual protected void DoMoveLeft(float speedOffset)
     {
         transform.Translate(Vector3.left * Time.deltaTime * (gameManagerScript.SceneSpeed + speedOffset), Space.World);
-    }
+    } */
 
 }
