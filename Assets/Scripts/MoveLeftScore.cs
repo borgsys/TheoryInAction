@@ -9,7 +9,14 @@ public class MoveLeftScore : MoveLeft
 
     public void AddMyScore()
     {
-        gameManagerScript.AddScore(obstacleScore);
+        if (gameObject.CompareTag("Obstacle")) 
+        { // Not really needed in this game but anyway
+            gameManagerScript.AddScore(obstacleScore);
+        }
+        else if (gameObject.CompareTag("Score"))
+        {
+            gameManagerScript.AddScore(obstacleScore, true);
+        }
     }
 
     // POLYMORPHISM
@@ -23,7 +30,7 @@ public class MoveLeftScore : MoveLeft
             }
             else if (gameObject.CompareTag("Score"))
             {
-                gameManagerScript.AddScore(obstacleScore, true);
+                gameManagerScript.AddScore(obstacleScore, false);
             }
         }
         base.DestroyGameObject();

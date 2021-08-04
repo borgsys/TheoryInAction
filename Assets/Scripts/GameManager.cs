@@ -8,7 +8,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float m_highSceneSpeed;
     [SerializeField] private int m_highSpeedScoreMult;
     [SerializeField] protected float m_leftDestroyBoundary = -10;
+
     //private float m_currentSceneSpeed;
+    public static bool firstTime = true;
     private int m_gameScore;
     private int m_caughtBananas;
     private int m_missedBananas;
@@ -44,14 +46,17 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        canvasScript = GameObject.Find("Canvas").GetComponent<CanvasScript>();
-        SetNoSceneSpeed();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PauseGame();
+        if (firstTime)
+        {
+            // ShowStartInfo
+        }
+        else
+        {
+            canvasScript = GameObject.Find("Canvas").GetComponent<CanvasScript>();
+            SetNoSceneSpeed();
+            canvasScript.ShowBigText("GET READY");
+        }
     }
 
     public void SetHighSceneSpeed()
@@ -81,9 +86,9 @@ public class GameManager : MonoBehaviour
         }
         canvasScript.ShowScore(m_gameScore, m_caughtBananas, m_missedBananas);
     }
-    public void AddScore(int bananaScore, bool missedBanana)
+    public void AddScore(int bananaScore, bool catchedBanana)
     {
-        if (!missedBanana)
+        if (catchedBanana)
         {
             AddScore(bananaScore);
             // Update bananascore
@@ -110,5 +115,13 @@ public class GameManager : MonoBehaviour
         gameIsReady = true;
     }
 
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+    }
 
 }

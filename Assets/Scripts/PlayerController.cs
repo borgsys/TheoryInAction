@@ -25,8 +25,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float walkSpeed = 4.0f;
     [SerializeField] private float startPosX = 0f;
 
-    private CanvasScript canvasScript;
-
     private bool isOnGround = false;
     private bool canDoubleJump = false;
 
@@ -39,16 +37,10 @@ public class PlayerController : MonoBehaviour
         gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         // These looks for the child Skinned Mesh Renderers for player. 'transform.' makes sure it only searches this object (the player) and childs. 
-        //playerSMRend2 = transform.Find("CH_Punk").GetComponent<SkinnedMeshRenderer>();
         playerSMRend1 = transform.Find("CH_Sheriff").GetComponent<SkinnedMeshRenderer>();
         // Hide player
         playerSMRend1.enabled = false;
-        //playerSMRend2.enabled = false;
 
-        // Getting the CanvasScript for printing on screen
-        canvasScript = GameObject.Find("Canvas").GetComponent<CanvasScript>();
-        canvasScript.ShowBigText("GET READY");
-       
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
@@ -83,9 +75,7 @@ public class PlayerController : MonoBehaviour
                 }
                 playerAnim.SetTrigger("Jump_trig");
                 playerAudio.PlayOneShot(jumpSound, 1f);
-
                 dirtParticle.Stop();
-
             }
 
             // Speed up - uses animator Speed_f as multiplier in animation to change animation speed.
@@ -107,7 +97,6 @@ public class PlayerController : MonoBehaviour
             if (isOnGround)
             {
                 playerAnim.SetBool("Grounded", true);
-                canvasScript.HideBigText(); // Move for new canvas
                 transform.Translate(Vector3.forward * Time.deltaTime * walkSpeed);
             }
             if (transform.position.x >= startPosX) 
@@ -150,8 +139,7 @@ public class PlayerController : MonoBehaviour
 
                 // Stop main audio
                 mainCameraAudio.Stop();
-                canvasScript.ShowBigText("GAME OVER!!");
-                //Debug.Log("GAME OVER! Score: " + scoreKeeper);
+                gameManagerScript.SignalGameOver();
             }
         }
         // Running some cinematic (intro scene)
