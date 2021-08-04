@@ -16,10 +16,7 @@ public class CanvasScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     public void ShowScore(int score, int caught, int missed)
     {

@@ -14,33 +14,25 @@ public class PlayerController : MonoBehaviour
     //private SkinnedMeshRenderer playerSMRend2;
     private AudioSource mainCameraAudio;
 
-    public ParticleSystem explosionParticle;
-    public ParticleSystem dirtParticle;
+    [SerializeField] private ParticleSystem explosionParticle;
+    [SerializeField] private ParticleSystem dirtParticle;
 
-    public AudioClip jumpSound;
-    public AudioClip crashSound;
-    public AudioClip bananaSound;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip crashSound;
+    [SerializeField] private AudioClip bananaSound;
+    [SerializeField] private float jumpForce = 40;
+    [SerializeField] private float gravityModifier = 1;
+    [SerializeField] private float walkSpeed = 4.0f;
+    [SerializeField] private float startPosX = 0f;
 
-    public CanvasScript canvasScript;
+    private CanvasScript canvasScript;
 
-    public bool isOnGround = false;
-    public bool canDoubleJump = false;    
-    public float jumpForce = 40;
-    public float gravityModifier = 1;
-    public float walkSpeed = 4.0f;
-    public float startPosX = 0f;
+    private bool isOnGround = false;
+    private bool canDoubleJump = false;
 
-    public float runStaticSpeed = 1.0f;
-    public float runStaticFast = 1.1f;
+    private float runStaticSpeed = 1.0f;
+    private float runStaticFast = 1.1f;
     
-    public bool gameOver = false;
-    public bool gameReady = false;
-
-    private int scoreKeeper = 0;// minus the objects already in scene
-    private int bananasCaught = 0;
-    private int bananasMissed = 0;
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -65,14 +57,10 @@ public class PlayerController : MonoBehaviour
         
         Physics.gravity *= gravityModifier;
 
-        //Debug.Log("Start() : Before IF : dirtParticle.isPlaying " + dirtParticle.isPlaying);
-
         if (dirtParticle.isPlaying)
         {
             dirtParticle.Stop(); // Make sure to stop at touch ground on intro!
             dirtParticle.Clear();
-
-            //Debug.Log("Start() : Inside IF : dirtParticle.isPlaying " + dirtParticle.isPlaying);
         }
     }
 
@@ -81,7 +69,7 @@ public class PlayerController : MonoBehaviour
     {
         if (gameManagerScript.GameIsPlaying)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && isOnGround && gameReady && !gameOver)
+            if (Input.GetKeyDown(KeyCode.Space) && isOnGround && gameManagerScript.GameIsPlaying)
             {
                 playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
                 // Simple added solution for doublejump
@@ -119,15 +107,14 @@ public class PlayerController : MonoBehaviour
             if (isOnGround)
             {
                 playerAnim.SetBool("Grounded", true);
-                canvasScript.HideBigText();
+                canvasScript.HideBigText(); // Move for new canvas
                 transform.Translate(Vector3.forward * Time.deltaTime * walkSpeed);
             }
             if (transform.position.x >= startPosX) 
             {
-                //canvasScript.HideBigText();
                 playerAnim.SetFloat("Speed_f", runStaticSpeed); // Start "run_static" animation Speed_f > 0.5
                 dirtParticle.Play();
-                gameReady = true;
+                gameManagerScript.SignalGameReady();
             }
         }
 
@@ -146,8 +133,8 @@ public class PlayerController : MonoBehaviour
             else if (collision.gameObject.CompareTag("Score"))
             {
                 playerAudio.PlayOneShot(bananaSound, 0.8f);
+                collision.gameObject.GetComponent<MoveLeftScore>().AddMyScore();
                 Destroy(collision.gameObject);
-                gameManagerScript.AddScore(1, false);
             }
             else if (collision.gameObject.CompareTag("Obstacle"))
             {
@@ -175,8 +162,7 @@ public class PlayerController : MonoBehaviour
                 // Show and drop player
                 playerAnim.SetBool("Grounded", false);
                 GetComponent<Rigidbody>().useGravity = true;
-                playerSMRend1.enabled = true;
-                //playerSMRend2.enabled = true;
+                playerSMRend1.enabled = true;              
             }
             if (collision.gameObject.CompareTag("Ground"))
             {
@@ -186,42 +172,5 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-    public void AddScore()
-    {
-        if (!gameOver)
-        {
-            scoreKeeper++;
-            canvasScript.ShowScore(scoreKeeper, bananasCaught, bananasMissed);
-            //Debug.Log("Score: " + scoreKeeper);
-        }
-    }
-    public void AddDoubleScore()
-    {
-        if (!gameOver)
-        {
-            scoreKeeper += 2;
-            canvasScript.ShowScore(scoreKeeper, bananasCaught, bananasMissed);
-            //Debug.Log("Score: " + scoreKeeper);
-        }
-    }
-    public void AddMissedBananas()
-    {
-        if (!gameOver)
-        {
-            bananasMissed++;
-            canvasScript.ShowScore(scoreKeeper, bananasCaught, bananasMissed);
-        }
-    }
-    public void AddMissedDoubleBananas()
-    {
-        if (!gameOver)
-        {
-            bananasMissed += 2;
-            canvasScript.ShowScore(scoreKeeper, bananasCaught, bananasMissed);
-        }
-    }
-    public int GetScore()
-    {
-        return scoreKeeper;
-    }
+ 
 }

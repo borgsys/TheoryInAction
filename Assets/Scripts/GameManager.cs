@@ -6,13 +6,24 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private float m_normalSceneSpeed;
     [SerializeField] private float m_highSceneSpeed;
+    [SerializeField] private int m_highSpeedScoreMult;
+    [SerializeField] protected float m_leftDestroyBoundary = -10;
     //private float m_currentSceneSpeed;
     private int m_gameScore;
     private int m_caughtBananas;
     private int m_missedBananas;
 
+    private CanvasScript canvasScript;
+
+    // ENCAPSULATION
     public float SceneSpeed { get; private set; }
-    // ENCAPSULATING
+    public float LeftDestroyBoundary
+    {
+        get
+        {
+            return m_leftDestroyBoundary;
+        }
+    }
     public bool GameIsPlaying 
     {
         get
@@ -33,7 +44,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetNormalSceneSpeed();
+        canvasScript = GameObject.Find("Canvas").GetComponent<CanvasScript>();
+        SetNoSceneSpeed();
     }
 
     // Update is called once per frame
@@ -51,11 +63,23 @@ public class GameManager : MonoBehaviour
     {
         SceneSpeed = m_normalSceneSpeed;
     }
+    public void SetNoSceneSpeed()
+    {
+        SceneSpeed = 0;
+    }
 
+    // POLYMORPHISM and ABSTRACTION
     public void AddScore(int scoreToAdd)
     {
-        m_gameScore += scoreToAdd;
-        // Update 
+        if (SceneSpeed == m_highSceneSpeed)
+        {
+            m_gameScore += (scoreToAdd * m_highSpeedScoreMult);
+        }
+        else
+        {
+            m_gameScore += scoreToAdd;
+        }
+        canvasScript.ShowScore(m_gameScore, m_caughtBananas, m_missedBananas);
     }
     public void AddScore(int bananaScore, bool missedBanana)
     {
@@ -70,11 +94,20 @@ public class GameManager : MonoBehaviour
             // Update missed bananascore
             m_missedBananas++;
         }
+        canvasScript.ShowScore(m_gameScore, m_caughtBananas, m_missedBananas);
     }
 
+    // ABSTRACTION
     public void SignalGameOver()
     {
         GameOver = true;
+        canvasScript.ShowBigText("GAME OVER!!");
+    }
+    public void SignalGameReady()
+    {
+        canvasScript.HideBigText();
+        SetNormalSceneSpeed();
+        gameIsReady = true;
     }
 
 

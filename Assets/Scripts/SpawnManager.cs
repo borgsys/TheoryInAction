@@ -6,6 +6,9 @@ public class SpawnManager : MonoBehaviour
 {
     //public int obstacleIndexMin = 0;
     //public int obstacleIndexMax = 4;
+
+    private GameManager gameManagerScript;
+
     public GameObject[] obstaclePrefabs; //
     public int obstacleIndex;
     private float spawnPosX = 35f;
@@ -18,29 +21,21 @@ public class SpawnManager : MonoBehaviour
     private int expandSpawnAtScore = 15;
     private int expandSpawnWith = 4;
 
-    private PlayerController playerControllerScript;
-
     // Start is called before the first frame update
     void Start()
     {
-
-        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
         // Invoke used instead of InvokeRepeating to set different spawn intervals
         Invoke("SpawnObstacle", spawnRate+startDelay);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     void SpawnObstacle()
     {
-        if (playerControllerScript.gameReady && !playerControllerScript.gameOver)
+        if (gameManagerScript.GameIsPlaying)
         {
             // Wait until certain score to add other spawnobjects and also longer spawnrates
-            if ((playerControllerScript.GetScore() > expandSpawnAtScore) && (spawnRate > midSpawnRate))
+            if ((gameManagerScript.GameScore > expandSpawnAtScore) && (spawnRate > midSpawnRate))
             {
                 obstacleIndex = Random.Range(0, obstaclePrefabs.Length);
             }
@@ -68,7 +63,7 @@ public class SpawnManager : MonoBehaviour
             Invoke("SpawnObstacle", spawnRate);
             
         }
-        else if (!playerControllerScript.gameOver)
+        else if (!gameManagerScript.GameOver)
         {
             // In case SpawnObstacle was invoked and game wasn't ready
             Invoke("SpawnObstacle", spawnRate+startDelay);

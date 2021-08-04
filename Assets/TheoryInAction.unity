@@ -123,6 +123,25 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &159896737 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 276126935205591404, guid: cf15f5e55defec94fbdf76fdc0e1b90b,
+    type: 3}
+  m_PrefabInstance: {fileID: 482021008}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &159896738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159896737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 709064abf6457554e85fc2473df18f15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_offsetSpeed: 5
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +460,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 905022771347260398, guid: cf15f5e55defec94fbdf76fdc0e1b90b, type: 3}
+    - {fileID: 3611103159689145676, guid: cf15f5e55defec94fbdf76fdc0e1b90b, type: 3}
+    - {fileID: 8933253020348658561, guid: cf15f5e55defec94fbdf76fdc0e1b90b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cf15f5e55defec94fbdf76fdc0e1b90b, type: 3}
 --- !u!1 &534669902
 GameObject:
@@ -708,7 +730,6 @@ GameObject:
   m_Component:
   - component: {fileID: 835818921}
   - component: {fileID: 835818920}
-  - component: {fileID: 835818922}
   - component: {fileID: 835818924}
   - component: {fileID: 835818923}
   m_Layer: 9
@@ -784,20 +805,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &835818922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835818919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 639ab4e08053e874890d14e7a991a22f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 30
-  superspeed: 40
 --- !u!65 &835818923
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -823,6 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba82e71194ee8844a9996f3075bd6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_offsetSpeed: 0
 --- !u!850595691 &1185838226
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -915,6 +923,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_normalSceneSpeed: 30
   m_highSceneSpeed: 40
+  m_highSpeedScoreMult: 0
+  m_leftDestroyBoundary: -10
 --- !u!4 &1464399657
 Transform:
   m_ObjectHideFlags: 0
@@ -1469,17 +1479,10 @@ MonoBehaviour:
   jumpSound: {fileID: 8300000, guid: 08ab7053d586c458db3774d33c141a4b, type: 3}
   crashSound: {fileID: 8300000, guid: 4bcde6de2166e41e284ec46d8a01fb90, type: 3}
   bananaSound: {fileID: 8300000, guid: 113ee460fadc340e4957a7404a9fbb27, type: 3}
-  canvasScript: {fileID: 0}
-  isOnGround: 0
-  canDoubleJump: 1
   jumpForce: 1500
   gravityModifier: 5
   walkSpeed: 1
   startPosX: 0
-  runStaticSpeed: 1
-  runStaticFast: 1.5
-  gameOver: 0
-  gameReady: 0
 --- !u!65 &2089631157
 BoxCollider:
   m_ObjectHideFlags: 0
