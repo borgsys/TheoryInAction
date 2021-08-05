@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float m_highSceneSpeed;
     [SerializeField] private int m_highSpeedScoreMult;
     [SerializeField] protected float m_leftDestroyBoundary = -10;
-
+    [SerializeField] private float gravityModifier = 5f;
     //private float m_currentSceneSpeed;
     private static bool firstTime = true;
     private int m_gameScore;
@@ -65,13 +65,14 @@ public class GameManager : MonoBehaviour
         if (firstTime)
         {
             canvasScript.ShowFirstInfo(true);
+            Physics.gravity *= gravityModifier;
             firstTime = false;
             PauseGame();
         }
         else
         {
-            canvasScript.ShowMainText("GET READY!");
             ResumeGame();
+            canvasScript.ShowMainText("GET READY!");
         }
     }
 
@@ -160,6 +161,7 @@ public class GameManager : MonoBehaviour
     {
         canvasScript.ShowFirstInfo(false);
         ResumeGame();
+        canvasScript.ShowMainText("GET READY!");
     }
     public void RestartGame()
     {

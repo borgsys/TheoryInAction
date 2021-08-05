@@ -10,6 +10,6 @@ public class BananaRotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0, Time.deltaTime*20, 0);
+        transform.Rotate(0, Time.deltaTime*100, 0);
     }
 }

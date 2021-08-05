@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     public AudioClip crashSound;
     public AudioClip bananaSound;
     public float jumpForce = 1500f;
-    public float gravityModifier = 5f;
+    
     public float walkSpeed = 1.0f;
     public float startPosX = 0f;
 
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
         //mainCameraAudio = GameObject.Find("Main Camera").GetComponent<AudioSource>();
         
-        Physics.gravity *= gravityModifier;
+        
         if (dirtParticle.isPlaying)
         {
             dirtParticle.Stop(); // Make sure to stop at touch ground on intro!
