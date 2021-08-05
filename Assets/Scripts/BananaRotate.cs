@@ -5,14 +5,11 @@ using UnityEngine;
 public class BananaRotate : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
 
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0, 10, 0);
+        transform.Rotate(0, Time.deltaTime*20, 0);
     }
 }

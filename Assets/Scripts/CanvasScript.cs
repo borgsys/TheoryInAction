@@ -6,13 +6,24 @@ using UnityEngine.UI;
 public class CanvasScript : MonoBehaviour
 {
     private Text textScore;
-    private Text textGameOver;
+    private Text textMain;
+    private Text textInfo;
+    private Text textGameTitle;
+    private Button btnStart;
+    private Button btnRestart;
+    private Button btnQuit;
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("CanvasSCript Start");
         textScore = transform.Find("TextScore").GetComponent<Text>();
-        textGameOver = transform.Find("TextGameOver").GetComponent<Text>();
+        textMain = transform.Find("TextMain").GetComponent<Text>();
+        textInfo = transform.Find("TextInfo").GetComponent<Text>();
+        textGameTitle = transform.Find("TextGameTitle").GetComponent<Text>();
+        btnStart = transform.Find("BtnStart").GetComponent<Button>();
+        btnRestart = transform.Find("BtnRestart").GetComponent<Button>();
+        btnQuit = transform.Find("BtnQuit").GetComponent<Button>();
     }
 
     // Update is called once per frame
@@ -22,16 +33,28 @@ public class CanvasScript : MonoBehaviour
     {
         textScore.text = "Score: " + score + "\nBananas: " + caught + " of " + (caught + missed);
     }
-    public void ShowBigText(string printText)
+    public void ShowMainText(string printText)
     {
-        textGameOver.text = printText;
-        textGameOver.enabled = true;
+        textMain.text = printText;
+        textMain.enabled = true;
     }
-    public void HideBigText()
+    public void HideMainText()
     {
-        textGameOver.enabled = false;
+        textMain.enabled = false;
     }
 
-    
+    public void ShowFirstInfo(bool doShow)
+    {
+        textGameTitle.enabled = doShow;
+        textInfo.enabled = doShow;
+        btnStart.gameObject.SetActive(doShow);
+    }
+
+    public void ShowButtons(bool doShow)
+    {
+        btnRestart.gameObject.SetActive(doShow);
+        btnQuit.gameObject.SetActive(doShow);   
+    }
+
 
 }

@@ -947,7 +947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 90361e34aa21ad14bb72f8c21374cdc9, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1096,7 +1096,7 @@ GameObject:
   - component: {fileID: 850615772}
   - component: {fileID: 850615771}
   m_Layer: 5
-  m_Name: btnQuit
+  m_Name: BtnQuit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1165,7 +1165,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 850615772}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1464399656}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &850615772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1217,7 +1229,7 @@ GameObject:
   - component: {fileID: 1040964356}
   - component: {fileID: 1040964355}
   m_Layer: 5
-  m_Name: btnStart
+  m_Name: BtnStart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1287,13 +1299,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464399655}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1464399656}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: StartFirstGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1350,7 +1362,7 @@ GameObject:
   - component: {fileID: 1047495917}
   - component: {fileID: 1047495916}
   m_Layer: 5
-  m_Name: btnRestart
+  m_Name: BtnRestart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1419,7 +1431,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1047495917}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1464399656}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1047495917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1550,8 +1574,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_normalSceneSpeed: 30
   m_highSceneSpeed: 40
-  m_highSpeedScoreMult: 0
-  m_leftDestroyBoundary: -10
+  m_highSpeedScoreMult: 2
+  m_leftDestroyBoundary: -8
 --- !u!4 &1464399657
 Transform:
   m_ObjectHideFlags: 0
@@ -1913,7 +1937,7 @@ Canvas:
   m_GameObject: {fileID: 1785331847}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 534669904}
   m_PlaneDistance: 1
   m_PixelPerfect: 0
@@ -1921,7 +1945,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -2072,7 +2096,7 @@ GameObject:
   - component: {fileID: 2046410494}
   - component: {fileID: 2046410493}
   m_Layer: 5
-  m_Name: TextGameOver
+  m_Name: TextMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

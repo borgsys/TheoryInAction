@@ -12,18 +12,18 @@ public class PlayerController : MonoBehaviour
     private AudioSource playerAudio;
     private SkinnedMeshRenderer playerSMRend1; // These are used to access the two child meshed renderers used for the player
     //private SkinnedMeshRenderer playerSMRend2;
-    private AudioSource mainCameraAudio;
+    //private AudioSource mainCameraAudio;
 
-    [SerializeField] private ParticleSystem explosionParticle;
-    [SerializeField] private ParticleSystem dirtParticle;
+    public ParticleSystem explosionParticle;
+    public ParticleSystem dirtParticle;
 
-    [SerializeField] private AudioClip jumpSound;
-    [SerializeField] private AudioClip crashSound;
-    [SerializeField] private AudioClip bananaSound;
-    [SerializeField] private float jumpForce = 40;
-    [SerializeField] private float gravityModifier = 1;
-    [SerializeField] private float walkSpeed = 4.0f;
-    [SerializeField] private float startPosX = 0f;
+    public AudioClip jumpSound;
+    public AudioClip crashSound;
+    public AudioClip bananaSound;
+    public float jumpForce = 1500f;
+    public float gravityModifier = 5f;
+    public float walkSpeed = 1.0f;
+    public float startPosX = 0f;
 
     private bool isOnGround = false;
     private bool canDoubleJump = false;
@@ -35,25 +35,23 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
-
         // These looks for the child Skinned Mesh Renderers for player. 'transform.' makes sure it only searches this object (the player) and childs. 
         playerSMRend1 = transform.Find("CH_Sheriff").GetComponent<SkinnedMeshRenderer>();
         // Hide player
         playerSMRend1.enabled = false;
-
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();
 
-        mainCameraAudio = GameObject.Find("Main Camera").GetComponent<AudioSource>();
+        //mainCameraAudio = GameObject.Find("Main Camera").GetComponent<AudioSource>();
         
         Physics.gravity *= gravityModifier;
-
         if (dirtParticle.isPlaying)
         {
             dirtParticle.Stop(); // Make sure to stop at touch ground on intro!
             dirtParticle.Clear();
         }
+        Debug.Log("Jumpforce start: " + jumpForce);
     }
 
     // Update is called once per frame
@@ -61,9 +59,10 @@ public class PlayerController : MonoBehaviour
     {
         if (gameManagerScript.GameIsPlaying)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && isOnGround && gameManagerScript.GameIsPlaying)
+            if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
             {
                 playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                Debug.Log("Jumpforce update: " + jumpForce);
                 // Simple added solution for doublejump
                 if (canDoubleJump)
                 {
@@ -79,16 +78,20 @@ public class PlayerController : MonoBehaviour
             }
 
             // Speed up - uses animator Speed_f as multiplier in animation to change animation speed.
-            if (gameManagerScript.GameIsPlaying && Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 gameManagerScript.SetHighSceneSpeed();
                 playerAnim.SetFloat("Speed_f", runStaticFast);
             }
             // Slow down
-            if (gameManagerScript.GameIsPlaying && Input.GetKeyUp(KeyCode.LeftShift))
+            if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 gameManagerScript.SetNormalSceneSpeed();
                 playerAnim.SetFloat("Speed_f", runStaticSpeed);
+            }
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                gameManagerScript.TogglePause();
             }
         }
         // Running some cinematic (intro scene)
@@ -127,8 +130,6 @@ public class PlayerController : MonoBehaviour
             }
             else if (collision.gameObject.CompareTag("Obstacle"))
             {
-                gameManagerScript.SignalGameOver();
-
                 playerAnim.SetBool("Death_b", true);
                 playerAnim.SetInteger("DeathType_int", 1);
                 explosionParticle.Play();
@@ -137,8 +138,6 @@ public class PlayerController : MonoBehaviour
                 dirtParticle.Stop();
                 dirtParticle.Clear();
 
-                // Stop main audio
-                mainCameraAudio.Stop();
                 gameManagerScript.SignalGameOver();
             }
         }
